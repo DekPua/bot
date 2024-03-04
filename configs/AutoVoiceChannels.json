@@ -1,0 +1,48 @@
+{
+    "Type": {
+        "Normal": "Normal",
+        "Private": "Private",
+        "Hide": "Hide"
+    },
+    "Channels": [
+        {
+            "id": "1213473935707078786",
+            "type": "Normal",
+            "category": "1213473826881544193",
+            "title": "%username%'s Channel",
+            "permission": {
+                "everyone": {
+                    "View": true,
+                    "Connect": true,
+                    "Speak": true
+                }
+            }
+        },
+        {
+            "id": "1213461523452661771",
+            "type": "Normal",
+            "category": "1213461455391690845",
+            "title": "%username%'s Channel",
+            "permission": {
+                "everyone": {
+                    "View": true,
+                    "Connect": true,
+                    "Speak": true
+                }
+            }
+        },
+        {
+            "id": "1213458291015819305",
+            "type": "Normal",
+            "category": "1213458246480826398",
+            "title": "%username%'s Channel",
+            "permission": {
+                "everyone": {
+                    "View": true,
+                    "Connect": true,
+                    "Speak": true
+                }
+            }
+        }
+    ]
+}
