@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "release": "node index.js",
     "dev": "nodemon ./index.js"
   },
   "keywords": [],

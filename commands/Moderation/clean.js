@@ -45,40 +45,40 @@ module.exports = {
         .setDescriptionLocalizations({ th: "ทำความสะอาดห้อง (ลบข้อความ)" })
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
         .addIntegerOption((option) => option.setName("count").setDescription('Message Count').setDescriptionLocalizations({ th: "จำนวนข้อความ" }).setRequired(true))
-        .addStringOption((option) =>
-            option
-                .setName("time")
-                .setDescription("Started time")
-                .setRequired(false)
-                .addChoices(
-                    { name: "From the beginning", name_localizations: { th: "ตั้งแต่ต้น" }, value: "start" },
-                    { name: "1 Hour", name_localizations: { th: "1 ชั่วโมงที่แล้ว" }, value: "1_hour" },
-                    { name: "2 Hours", name_localizations: { th: "2 ชั่วโมงที่แล้ว" }, value: "2_hour" },
-                    { name: "3 Hours", name_localizations: { th: "3 ชั่วโมงที่แล้ว" }, value: "3_hour" },
-                    { name: "4 Hours", name_localizations: { th: "4 ชั่วโมงที่แล้ว" }, value: "4_hour" },
-                    { name: '5 Hours', name_localizations: { th: "5 ชั่วโมงที่แล้ว" }, value: '5_hour' },
-                    { name: '6 Hours', name_localizations: { th: "6 ชั่วโมงที่แล้ว" }, value: '6_hour' },
-                    { name: '7 Hours', name_localizations: { th: "7 ชั่วโมงที่แล้ว" }, value: '7_hour' },
-                    { name: '8 Hours', name_localizations: { th: "8 ชั่วโมงที่แล้ว" }, value: '8_hour' },
-                    { name: '9 Hours', name_localizations: { th: "9 ชั่วโมงที่แล้ว" }, value: '9_hour' },
-                    { name: '10 Hours', name_localizations: { th: "10 ชั่วโมงที่แล้ว" }, value: '10_hour' },
-                    { name: '11 Hours', name_localizations: { th: "11 ชั่วโมงที่แล้ว" }, value: '11_hour' },
-                    { name: '12 Hours', name_localizations: { th: "12 ชั่วโมงที่แล้ว" }, value: '12_hour' },
-                    { name: '1 Day', name_localizations: { th: "1 วันที่แล้ว" }, value: '1_day' },
-                    { name: '2 Days', name_localizations: { th: "2 วันที่แล้ว" }, value: '2_day' },
-                    { name: '3 Days', name_localizations: { th: "3 วันที่แล้ว" }, value: '3_day' },
-                    { name: '4 Days', name_localizations: { th: "4 วันที่แล้ว" }, value: '4_day' },
-                    { name: '5 Days', name_localizations: { th: "5 วันที่แล้ว" }, value: '5_day' },
-                    { name: '6 Days', name_localizations: { th: "6 วันที่แล้ว" }, value: '6_day' },
-                    { name: '7 Days', name_localizations: { th: "7 วันที่แล้ว" }, value: '7_day' },
-                    { name: '1 Month', name_localizations: { th: "1 เดือนที่แล้ว" }, value: '1_month' },
-                    { name: '2 Months', name_localizations: { th: "2 เดือนที่แล้ว" }, value: '2_month' },
-                    { name: '3 Months', name_localizations: { th: "3 เดือนที่แล้ว" }, value: '3_month' },
-                    { name: '4 Months', name_localizations: { th: "4 เดือนที่แล้ว" }, value: '4_month' },
-                    { name: '5 Months', name_localizations: { th: "5 เดือนที่แล้ว" }, value: '5_month' },
-                )
-                .setDescriptionLocalizations({ th: "เวลาที่เริ่ม" })
-        ),
+        // .addStringOption((option) =>
+        //     option
+        //         .setName("time")
+        //         .setDescription("Started time")
+        //         .setRequired(false)
+        //         .addChoices(
+        //             { name: "From the beginning", name_localizations: { th: "ตั้งแต่ต้น" }, value: "start" },
+        //             { name: "1 Hour", name_localizations: { th: "1 ชั่วโมงที่แล้ว" }, value: "1_hour" },
+        //             { name: "2 Hours", name_localizations: { th: "2 ชั่วโมงที่แล้ว" }, value: "2_hour" },
+        //             { name: "3 Hours", name_localizations: { th: "3 ชั่วโมงที่แล้ว" }, value: "3_hour" },
+        //             { name: "4 Hours", name_localizations: { th: "4 ชั่วโมงที่แล้ว" }, value: "4_hour" },
+        //             { name: '5 Hours', name_localizations: { th: "5 ชั่วโมงที่แล้ว" }, value: '5_hour' },
+        //             { name: '6 Hours', name_localizations: { th: "6 ชั่วโมงที่แล้ว" }, value: '6_hour' },
+        //             { name: '7 Hours', name_localizations: { th: "7 ชั่วโมงที่แล้ว" }, value: '7_hour' },
+        //             { name: '8 Hours', name_localizations: { th: "8 ชั่วโมงที่แล้ว" }, value: '8_hour' },
+        //             { name: '9 Hours', name_localizations: { th: "9 ชั่วโมงที่แล้ว" }, value: '9_hour' },
+        //             { name: '10 Hours', name_localizations: { th: "10 ชั่วโมงที่แล้ว" }, value: '10_hour' },
+        //             { name: '11 Hours', name_localizations: { th: "11 ชั่วโมงที่แล้ว" }, value: '11_hour' },
+        //             { name: '12 Hours', name_localizations: { th: "12 ชั่วโมงที่แล้ว" }, value: '12_hour' },
+        //             { name: '1 Day', name_localizations: { th: "1 วันที่แล้ว" }, value: '1_day' },
+        //             { name: '2 Days', name_localizations: { th: "2 วันที่แล้ว" }, value: '2_day' },
+        //             { name: '3 Days', name_localizations: { th: "3 วันที่แล้ว" }, value: '3_day' },
+        //             { name: '4 Days', name_localizations: { th: "4 วันที่แล้ว" }, value: '4_day' },
+        //             { name: '5 Days', name_localizations: { th: "5 วันที่แล้ว" }, value: '5_day' },
+        //             { name: '6 Days', name_localizations: { th: "6 วันที่แล้ว" }, value: '6_day' },
+        //             { name: '7 Days', name_localizations: { th: "7 วันที่แล้ว" }, value: '7_day' },
+        //             { name: '1 Month', name_localizations: { th: "1 เดือนที่แล้ว" }, value: '1_month' },
+        //             { name: '2 Months', name_localizations: { th: "2 เดือนที่แล้ว" }, value: '2_month' },
+        //             { name: '3 Months', name_localizations: { th: "3 เดือนที่แล้ว" }, value: '3_month' },
+        //             { name: '4 Months', name_localizations: { th: "4 เดือนที่แล้ว" }, value: '4_month' },
+        //             { name: '5 Months', name_localizations: { th: "5 เดือนที่แล้ว" }, value: '5_month' },
+        //         )
+        //         .setDescriptionLocalizations({ th: "เวลาที่เริ่ม" })
+        ,
     async execute(interaction, client) {
         const { options } = interaction;
         const count = options.getInteger('count');
@@ -87,16 +87,23 @@ module.exports = {
 
         await interaction.deferReply({ ephemeral: true });
 
-        const messages = await interaction.channel.messages.fetch({ limit: count, cache: false });
+        try {
+            const messages = await interaction.channel.messages.fetch({ limit: count, cache: false });
 
+        console.log(messages.length);
+        
         messages.forEach(async (message, index) => {
-            console.log(index);
             message.delete();
         });
 
         await interaction.editReply({
-            content: `Remove Success ${count}!`
+            content: `กำลังลบ ${count} ข้อความ!\nหากมีข้อความเยอะอาจใช้เวลาซักครู่`
         });
+        } catch (error) {
+            await interaction.editReply({
+                content: `ไม่สามารถลบข้อความได้`
+            });
+        }
 
 
 
