@@ -31,9 +31,7 @@ module.exports = {
 
             if (login.data.detail.activate) {
                 let member;
-                const verifyRole = await interaction.guild.roles.cache.get(
-                    "1213365646667157514"
-                );
+                const verifyRole = await interaction.guild.roles.cache.get("1213365646667157514");
 
                 const hasVerify = await interaction.member.roles.cache.has(verifyRole);
 
