@@ -339,7 +339,10 @@ module.exports = async (interaction, client) => {
                     await interaction.reply({ content: "✅ ยืนยันตัวตนสำเร็จ", ephemeral: true });
                 }
                 else return await interaction.reply({ content: "❌ ยืนยันตัวตนไม่สำเร็จ\nOTP ไม่ถูกต้อง", ephemeral: true });
-            }
+            } else return await interaction.reply({
+                content: "❌ ไม่สามารถยืนยันตัวตนได้เนื่องจากเกิดข้อผิดหลาดกรุณาลองใหม่อีกครั้งภายหลัง",
+                ephemeral: true
+            });
         }
     }
 }
