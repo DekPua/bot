@@ -21,7 +21,6 @@ module.exports = (client) => {
     }
 
     client.timeout = async (member, time, reasons) => {
-        console.log(member.user.username, time, reasons);
         await member.send({
             embeds: [
                 new EmbedBuilder()
