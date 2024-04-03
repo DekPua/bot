@@ -12,7 +12,9 @@ module.exports = {
         else if (interaction.isModalSubmit()) await ModalSubmit(interaction, client);
         else if (interaction.isStringSelectMenu()) await StringSelectMenu(interaction, client);
         else {
-            await interaction.reply({
+            await interaction.deferReply({ ephemeral: true });
+
+            await interaction.editReply({
                 content: "There was an error while executing!",
                 ephemeral: true,
             });

@@ -29,10 +29,12 @@ module.exports = {
         )
     ),
   async execute(interaction, client) {
+    await interaction.deferReply({ ephemeral: true });
+
     const targetChannel = await interaction.options.getChannel("target");
 
     if (!targetChannel.type == ChannelType.GuildText)
-      return await interaction.reply({
+      return await interaction.editReply({
         embeds: [
           new EmbedBuilder()
             .setColor("Yellow")
@@ -73,7 +75,7 @@ module.exports = {
       components: [row],
     });
 
-    await interaction.reply({
+    await interaction.editReply({
       embeds: [
         new EmbedBuilder()
           .setColor("Purple")

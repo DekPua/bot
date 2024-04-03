@@ -4,13 +4,25 @@ const { StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder
 const langs = {
     "th": {
         "ban": "แบน",
+        "ban-message": "แบนข้อความ",
+        "ban-voice": "แบนเสียง",
         "alert": "ตักเตือน",
+        "timeout": "หมดเวลา",
         "do-nothing": "ไม่ต้องทำอะไร",
         "report.user": "รายงานผู้ใช้",
         "thank_for_report": "ขอบคุณที่รายงานปัญหาให้พวกเรา เราจะนำปัญหาของท่านไปปรับปรุงระบบต่อไป!",
         "report": "รายงาน"
     },
     "en-us": {
+        "ban": "Ban",
+        "ban-message": "Ban Message",
+        "ban-voice": "Ban Voice",
+        "alert": "Alert",
+        "timeout": "Timeout",
+        "do-nothing": "Do nothing",
+        "report.user": "Report User",
+        "thank_for_report": "Thank you for reporting the issue to us. We will take your concerns into consideration for future improvements!",
+        "report": "Report"
     }
 }
 
@@ -19,8 +31,6 @@ module.exports = async (interaction, client) => {
 
     if (interaction.customId.startsWith('report_system_user')) {
         const reportedChannel = await client.channels.fetch('1214489941090897930');
-        
-        console.log(interaction.customId);
 
         if (!reportedChannel) return await interaction.reply({ embeds: [new EmbedBuilder().setColor('Red').setTitle('🚫 ไม่สามารถแจ้งปัญหาได้ กรุณาลองอีกครั้งภายหลัง!').setTimestamp(Date.now())], ephemeral: true });
 
@@ -33,6 +43,11 @@ module.exports = async (interaction, client) => {
                     .setDescription('แบนผู้ใช้คนนั้น')
                     .setValue('ban')
                     .setEmoji('🚫'),
+                new StringSelectMenuOptionBuilder()
+                    .setLabel(lang['timeout'])
+                    .setDescription('กำหนด')
+                    .setValue('timeout')
+                    .setEmoji('⌛'),
                 new StringSelectMenuOptionBuilder()
                     .setLabel(lang['alert'])
                     .setDescription('ส่งข้อความไปยังผู้ใช้นั้นเพื่อแจ้งเตือนเขา')
@@ -89,6 +104,11 @@ module.exports = async (interaction, client) => {
                     .setValue('ban')
                     .setEmoji('🚫'),
                 new StringSelectMenuOptionBuilder()
+                    .setLabel(lang['timeout'])
+                    .setDescription('กำหนด')
+                    .setValue('timeout')
+                    .setEmoji('⌛'),
+                new StringSelectMenuOptionBuilder()
                     .setLabel('ตักเตือน')
                     .setDescription('ส่งข้อความไปยังผู้ใช้นั้นเพื่อแจ้งเตือนเขา')
                     .setValue('send-message')
@@ -134,10 +154,6 @@ module.exports = async (interaction, client) => {
 
             const guild = await client.guilds.fetch('1213126282921902230');
 
-            const staffChannel = await guild.channels.fetch('1214489941090897930');
-
-            const messaege = await staffChannel.messages.fetch(messageId);
-
             const member = await guild.members.fetch(userId);
 
             if (!member) return await interaction.reply({
@@ -151,44 +167,49 @@ module.exports = async (interaction, client) => {
                 ephemeral: true,
             });
 
-            const isBan = await client.ban(member, reasons, `<@${interaction.member.id}>`);
+            const isBan = await client.ban(member, reasons);
 
             if (isBan) {
                 await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor("Green")
-                            .setTitle(`✅ แบน ${member.displayName} แล้ว`)
+                            .setTitle(`✅ แบน ${member.user.username} แล้ว`)
                     ],
                     ephemeral: true
                 });
 
+                if (messageId != 'none') {
+                    const staffChannel = await guild.channels.fetch('1214489941090897930');
 
-                const originalStaffEmbed = new EmbedBuilder(messaege.embeds[0])
-                    .setColor('Green')
-                    .addFields([
-                        {
-                            name: "ดำเนินการโดย (Ban)",
-                            value: `<@${interaction.member.id}>`,
-                            inline: true
-                        },
-                        {
-                            name: "Action",
-                            value: "🚫 Ban",
-                            inline: true
-                        },
-                        {
-                            name: "รายละเอียดของการกระทำ",
-                            value: `\`\`\`${reasons}\`\`\``,
-                            inline: false
-                        }
-                    ]);
+                    const messaege = await staffChannel.messages.fetch(messageId);
 
-                await messaege.edit({
-                    content: '',
-                    embeds: [originalStaffEmbed],
-                    components: []
-                });
+                    const originalStaffEmbed = new EmbedBuilder(messaege.embeds[0])
+                        .setColor('Green')
+                        .addFields([
+                            {
+                                name: "ดำเนินการโดย (Ban)",
+                                value: `<@${interaction.member.id}>`,
+                                inline: true
+                            },
+                            {
+                                name: "Action",
+                                value: "🚫 Ban",
+                                inline: true
+                            },
+                            {
+                                name: "รายละเอียดของการกระทำ",
+                                value: `\`\`\`TH: ${reasons.th}\nEN: ${reasons.en}\`\`\``,
+                                inline: false
+                            }
+                        ]);
+
+                    await messaege.edit({
+                        content: '',
+                        embeds: [originalStaffEmbed],
+                        components: []
+                    });
+                }
             } else {
                 await interaction.editReply({
                     embeds: [
@@ -199,6 +220,34 @@ module.exports = async (interaction, client) => {
                     ephemeral: true
                 });
             }
+
+            const eventChannel = await guild.channels.fetch('1225162911388012635');
+
+            eventChannel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor("Blue")
+                        .setTitle(`🚫 แบน ${member.user.username} แล้ว`)
+                        .addFields([
+                            {
+                                name: "ดำเนินการโดย (Ban)",
+                                value: `<@${interaction.member.id}>`,
+                                inline: true
+                            },
+                            {
+                                name: "Action",
+                                value: "🚫 Ban",
+                                inline: true
+                            },
+                            {
+                                name: "รายละเอียดของการกระทำ",
+                                value: `\`\`\`TH: ${reasons.th}\nEN: ${reasons.en}\`\`\``,
+                                inline: false
+                            }
+                        ])
+                        .setTimestamp(Date.now())
+                ]
+            });
         } else if (interaction.customId.startsWith('admin_panel_action_send_message')) {
             const text = await interaction.fields.getTextInputValue('message');
 
@@ -210,12 +259,6 @@ module.exports = async (interaction, client) => {
             const messageId = id.slice(-1)[0];
 
             const guild = await client.guilds.fetch('1213126282921902230');
-
-            const staffChannel = await guild.channels.fetch('1214489941090897930');
-
-            const message = await staffChannel.messages.fetch(messageId);
-
-            console.log(userId);
 
             const member = await guild.members.fetch(userId);
 
@@ -233,10 +276,10 @@ module.exports = async (interaction, client) => {
             const sendedMessage = await member.send({
                 embeds: [
                     new EmbedBuilder()
-                    .setColor('Purple')
-                    .setTitle('🔔 การแจ้งเตือนใหม่')
-                    .setDescription(`\`\`\`${text}\`\`\`\nNotification form Moderator <@${interaction.member.id}>`)
-                    .setTimestamp(Date.now())
+                        .setColor('Purple')
+                        .setTitle('🔔 การแจ้งเตือนใหม่')
+                        .setDescription(`\`\`\`${text}\`\`\`\nNotification form Moderator`)
+                        .setTimestamp(Date.now())
                 ]
             });
 
@@ -245,38 +288,44 @@ module.exports = async (interaction, client) => {
                     embeds: [
                         new EmbedBuilder()
                             .setColor("Green")
-                            .setTitle(`✅ ส่งข้อความถึง ${member.displayName} แล้ว`)
+                            .setTitle(`✅ ส่งข้อความถึง ${member.user.username} แล้ว`)
                             .setDescription(`\`\`\`${text}\`\`\``)
                     ],
                     ephemeral: true
                 });
 
+                if (messageId != 'none') {
+                    const staffChannel = await guild.channels.fetch('1214489941090897930');
 
-                const originalStaffEmbed = new EmbedBuilder(message.embeds[0])
-                    .setColor('Green')
-                    .addFields([
-                        {
-                            name: "ดำเนินการโดย (Alert)",
-                            value: `<@${interaction.member.id}>`,
-                            inline: true
-                        },
-                        {
-                            name: "Action",
-                            value: "✉️ Alert",
-                            inline: true
-                        },
-                        {
-                            name: "รายละเอียดของการกระทำ",
-                            value: `\`\`\`${text}\`\`\``,
-                            inline: false
-                        }
-                    ]);
+                    const message = await staffChannel.messages.fetch(messageId);
 
-                await message.edit({
-                    content: '',
-                    embeds: [originalStaffEmbed],
-                    components: []
-                })
+
+                    const originalStaffEmbed = new EmbedBuilder(message.embeds[0])
+                        .setColor('Green')
+                        .addFields([
+                            {
+                                name: "ดำเนินการโดย (Alert)",
+                                value: `<@${interaction.member.id}>`,
+                                inline: true
+                            },
+                            {
+                                name: "Action",
+                                value: "✉️ Alert",
+                                inline: true
+                            },
+                            {
+                                name: "รายละเอียดของการกระทำ",
+                                value: `\`\`\`${text}\`\`\``,
+                                inline: false
+                            }
+                        ]);
+
+                    await message.edit({
+                        content: '',
+                        embeds: [originalStaffEmbed],
+                        components: []
+                    })
+                }
             } else {
                 await interaction.editReply({
                     embeds: [
@@ -287,6 +336,146 @@ module.exports = async (interaction, client) => {
                     ephemeral: true
                 });
             }
+
+            const eventChannel = await guild.channels.fetch('1225162911388012635');
+
+            eventChannel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor("Blue")
+                        .setTitle(`⚠️ แจ้งเตือน ${member.user.username} แล้ว`)
+                        .addFields([
+                            {
+                                name: "ดำเนินการโดย (Alert)",
+                                value: `<@${interaction.member.id}>`,
+                                inline: true
+                            },
+                            {
+                                name: "Action",
+                                value: "✉️ Alert",
+                                inline: true
+                            },
+                            {
+                                name: "รายละเอียดของการกระทำ",
+                                value: `\`\`\`${text}\`\`\``,
+                                inline: false
+                            }
+                        ])
+                        .setTimestamp(Date.now())
+                ]
+            });
+        } else if (interaction.customId.startsWith('admin_panel_action_timeout')) {
+            const reasons = {
+                th: await interaction.fields.getTextInputValue('reason_th'),
+                en: await interaction.fields.getTextInputValue('reason_en'),
+            }
+
+            const time = parseInt(await interaction.fields.getTextInputValue('time_input')) * 60 * 1000;
+
+            await interaction.deferReply({ ephemeral: true });
+
+            const id = interaction.customId.split('_');
+
+            const userId = id.slice(-2)[0];
+            const messageId = id.slice(-1)[0];
+
+            const guild = await client.guilds.fetch('1213126282921902230');
+
+            const member = await guild.members.fetch(userId);
+
+            if (!member) return await interaction.reply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor("Red")
+                        .setTitle("❗ ไม่สามารถดำเนินการตามคำขอได้")
+                        .setDescription("กรุณาลองใหม่อีกครั้งภายหลัง")
+                        .setTimestamp(Date.now())
+                ],
+                ephemeral: true,
+            });
+
+            const isTimeout = await client.timeout(member, time, reasons);
+
+            if (isTimeout) {
+                await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor("Green")
+                            .setTitle(`✅ หมดเวลา ${member.user.username} แล้ว`)
+                    ],
+                    ephemeral: true
+                });
+
+
+                if (messageId != 'none') {
+                    const staffChannel = await guild.channels.fetch('1214489941090897930');
+
+                    const messaege = await staffChannel.messages.fetch(messageId);
+
+                    const originalStaffEmbed = new EmbedBuilder(messaege.embeds[0])
+                        .setColor('Green')
+                        .addFields([
+                            {
+                                name: "ดำเนินการโดย (Timeout)",
+                                value: `<@${interaction.member.id}>`,
+                                inline: true
+                            },
+                            {
+                                name: "Action",
+                                value: `⌛ Timeout (${time} นาที)`,
+                                inline: true
+                            },
+                            {
+                                name: "รายละเอียดของการกระทำ",
+                                value: `\`\`\`TH: ${reasons.th}\nEN: ${reasons.en}\`\`\``,
+                                inline: false
+                            }
+                        ]);
+
+                    await messaege.edit({
+                        content: '',
+                        embeds: [originalStaffEmbed],
+                        components: []
+                    });
+                }
+            } else {
+                await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor("Red")
+                            .setTitle(`❌ ไม่สามารถแบนได้`)
+                    ],
+                    ephemeral: true
+                });
+            }
+
+            const eventChannel = await guild.channels.fetch('1225162911388012635');
+
+            eventChannel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor("Blue")
+                        .setTitle(`⚠️ หมดเวลา ${member.user.username} แล้ว`)
+                        .addFields([
+                            {
+                                name: "ดำเนินการโดย (Timeout)",
+                                value: `<@${interaction.member.id}>`,
+                                inline: true
+                            },
+                            {
+                                name: "Action",
+                                value: `⌛ Timeout (${time} นาที)`,
+                                inline: true
+                            },
+                            {
+                                name: "รายละเอียดของการกระทำ",
+                                value: `\`\`\`TH: ${reasons.th}\nEN: ${reasons.en}\`\`\``,
+                                inline: false
+                            }
+                        ])
+                        .setTimestamp(Date.now())
+                ]
+            });
         }
     } else {
         const server_status = await axios.get(

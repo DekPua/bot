@@ -1,4 +1,4 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder } = require("discord.js");
+const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require("discord.js");
 
 module.exports = async (interaction, client) => {
     if (interaction.customId.startsWith('admin_panel_action_reported')) {
@@ -12,9 +12,6 @@ module.exports = async (interaction, client) => {
         const messageId = parts.slice(-2)[0];
 
         const userId = parts.slice(-1)[0];
-
-
-        console.log(channelId, messageId, userId);
 
         if (value == 'ban') {
             const modal = new ModalBuilder()
@@ -83,6 +80,41 @@ module.exports = async (interaction, client) => {
                 embeds: [originalStaffEmbed],
                 components: []
             })
+        } else if (value == 'timeout') {
+            const modal = new ModalBuilder()
+                .setCustomId(`admin_panel_action_timeout_${userId}_${interaction.message.id}`)
+                .setTitle("แผงควบคุมการหมดเวลา");
+
+            const time_input = new TextInputBuilder()
+                .setCustomId('time_input')
+                .setLabel('ระยะเวลา (นาที)')
+                .setPlaceholder('180')
+                .setRequired(true)
+                .setStyle(TextInputStyle.Short);
+
+            const reason_th = new TextInputBuilder()
+                .setCustomId('reason_th')
+                .setMaxLength(1000)
+                .setLabel('สาเหตุ')
+                .setPlaceholder('ตัวอย่าง: ตั้งชื่อไม่เหมาะสม, ส่งข้อความที่เกี่ยวกับเนื้อหาทางเพศ')
+                .setRequired(true)
+                .setStyle(TextInputStyle.Paragraph);
+
+            const reason_en = new TextInputBuilder()
+                .setCustomId('reason_en')
+                .setMaxLength(1000)
+                .setLabel('Reason')
+                .setPlaceholder('Examples: Inappropriate naming, sending sexually explicit messages')
+                .setRequired(true)
+                .setStyle(TextInputStyle.Paragraph);
+
+            const timeRow = new ActionRowBuilder().addComponents(time_input);
+            const firstRow = new ActionRowBuilder().addComponents(reason_th);
+            const secondRow = new ActionRowBuilder().addComponents(reason_en);
+
+            modal.addComponents(timeRow, firstRow, secondRow);
+
+            await interaction.showModal(modal)
         } else {
             await interaction.reply({
                 content: "There was an error while executing this command!",

@@ -12,6 +12,72 @@ module.exports = {
 
                 const EveryoneAllowPermission = [];
                 const EveryoneDenyPermission = [];
+
+                const BannedAllowPermission = [
+                    PermissionFlagsBits.ReadMessageHistory
+                ];
+
+                const BannedDenyPermission = [
+                    // general
+                    PermissionFlagsBits.ViewChannel,
+                    PermissionFlagsBits.ManageChannels,
+                    PermissionFlagsBits.ManageWebhooks,
+
+                    // membership
+                    PermissionFlagsBits.CreateInstantInvite,
+
+                    // text
+                    PermissionFlagsBits.SendMessages,
+                    PermissionFlagsBits.SendMessagesInThreads,
+                    PermissionFlagsBits.CreatePublicThreads,
+                    PermissionFlagsBits.CreatePrivateThreads,
+                    PermissionFlagsBits.EmbedLinks,
+                    PermissionFlagsBits.AttachFiles,
+                    PermissionFlagsBits.AddReactions,
+                    PermissionFlagsBits.UseExternalEmojis,
+                    PermissionFlagsBits.UseExternalStickers,
+                    PermissionFlagsBits.MentionEveryone,
+                    PermissionFlagsBits.ManageMessages,
+                    PermissionFlagsBits.ManageThreads,
+                    PermissionFlagsBits.SendTTSMessages,
+                    PermissionFlagsBits.UseApplicationCommands,
+                    PermissionFlagsBits.SendVoiceMessages,
+                    
+                    // voice
+                    PermissionFlagsBits.Connect,
+                    PermissionFlagsBits.Speak,
+                    PermissionFlagsBits.UseVAD,
+                    PermissionFlagsBits.UseSoundboard,
+                    PermissionFlagsBits.UseExternalSounds,
+                    PermissionFlagsBits.PrioritySpeaker,
+                    PermissionFlagsBits.MuteMembers,
+                    PermissionFlagsBits.DeafenMembers,
+                    PermissionFlagsBits.MoveMembers,
+                    
+                    // stage
+                    PermissionFlagsBits.RequestToSpeak,
+                    PermissionFlagsBits.MentionEveryone,
+                    
+                    // event
+                    PermissionFlagsBits.ManageEvents
+                ]
+
+                const VoiceBannedAllowPermission = [
+                    PermissionFlagsBits.ViewChannel,
+                    PermissionFlagsBits.ReadMessageHistory
+                ];
+
+                const VoiceBannedDenyPermission = [
+                    PermissionFlagsBits.Connect,
+                    PermissionFlagsBits.Speak,
+                    PermissionFlagsBits.UseVAD,
+                    PermissionFlagsBits.UseSoundboard,
+                    PermissionFlagsBits.UseExternalSounds,
+                    PermissionFlagsBits.PrioritySpeaker,
+                    PermissionFlagsBits.MuteMembers,
+                    PermissionFlagsBits.DeafenMembers,
+                    PermissionFlagsBits.MoveMembers,
+                ];     
     
                 // View
                 if (permission.everyone.View) {
@@ -47,13 +113,23 @@ module.exports = {
                                 PermissionFlagsBits.ViewChannel,
                                 PermissionFlagsBits.SendMessages,
                                 PermissionFlagsBits.Speak,
-                                PermissionFlagsBits.ManageChannels,
+                                PermissionFlagsBits.ManageChannels
                             ]
                         },
                         {
                             id: newState.guild.roles.everyone,
                             allow: EveryoneAllowPermission,
-                            deny: EveryoneDenyPermission,
+                            deny: EveryoneDenyPermission
+                        },
+                        {
+                            id: "1224776064769720371",
+                            allow: BannedAllowPermission,
+                            deny: BannedDenyPermission
+                        },
+                        {
+                            id: "1224777468116865085",
+                            allow: VoiceBannedAllowPermission,
+                            deny: VoiceBannedDenyPermission
                         }
                     ]
                 });

@@ -20,6 +20,8 @@ module.exports = {
     })
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction, client) {
+        await interaction.deferReply({ ephemeral: true });
+
         const lang = langs[interaction.locale] ?? langs["en-us"];
 
         const targetMember = await interaction.guild.members.fetch({
@@ -31,7 +33,7 @@ module.exports = {
         const profileJpg = await targetMember.displayAvatarURL({ extension: "jpg", size: 2048 });
         const profileWebp = await targetMember.displayAvatarURL({ extension: "webp", size: 2048 });
 
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                 .setColor('Purple')
