@@ -2,7 +2,7 @@ FROM node:20
 
 WORKDIR /discord/bot
 
-# Copy your Node.js application files
+# Copy Node.js application files
 COPY . .
 
 # Install Node.js dependencies

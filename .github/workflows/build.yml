@@ -1,9 +1,9 @@
-name: Docker Build
+name: Docker Build and Push
 
 on:
   push:
     branches:
-      - main  # Adjust this to match your branch name
+      - main
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t hewkawar/dekpua-bot:latest .
+        run: docker build -t hewkawar/dekpua-bot:latest -f ./build/Dockerfile .
         
       - name: Push Docker image
         run: docker push hewkawar/dekpua-bot:latest
