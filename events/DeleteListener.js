@@ -1,0 +1,46 @@
+const { Events, EmbedBuilder } = require("discord.js");
+
+module.exports = {
+    name: Events.MessageDelete,
+    async execute(message) {
+        if (!message.guild || !message.author || message.author.bot || !message) return;
+
+        if (message.guild.id != '1213126282921902230') return;
+
+        const sendChannel = await message.guild.channels.fetch('1226941337304305765');
+
+        let attachments = await message.attachments.map(attachment => attachment.url);
+
+        let member = message.author;
+
+        let deleteAt = Date.now();
+
+        let deleteUi = `<t:${Math.floor(deleteAt / 1000)}:R>`
+
+        const embed = new EmbedBuilder()
+        .setColor("Yellow")
+        .setTitle(`⚠️ ${member.username} ได้ลบข้อความใหม่!`)
+        .setDescription(`ข้อความถูกลบเมื่อ ${deleteUi}`)
+        .addFields(
+            {
+                name: "เนื้อหา",
+                value: `${message.content || "(No Content)"}`
+            },
+            {
+                name: "เจ้าของ",
+                value: `\`\`\`Username: ${member.username}\nId: ${member.id}\`\`\``
+            }
+        )
+        .setFooter({ text: "ลบไม่ได้ช่วยให้ลืม System" })
+        .setTimestamp(deleteAt);
+
+        if (attachments.length > 0) {
+            embed.addFields({
+                name: "แนบไฟล์",
+                value: attachments.join(' , ')
+            });
+        }
+
+        await sendChannel.send({ embeds: [embed] });
+    }
+}
