@@ -1,4 +1,4 @@
-const { default: axios } = require("axios");
+const axios = require("axios");
 const { Events, ChannelType } = require("discord.js");
 
 module.exports = {
@@ -8,14 +8,19 @@ module.exports = {
         if (message.author.bot) return;
         if (message.content.startsWith('.')) return;
 
-        const channelList = await axios.get(`${process.env.API_HOST}/autopublish/list`);
-        
         try {
-            if (!channelList.data.channels.includes(message.channel.id)) return;
+            const response = await axios.get(`${process.env.API_HOST}/autopublish/list`);
 
-            message.crosspost();
+            if (response.data.status === 0) {
+                const channels = response.data.channels.map(channel => channel.channelId);
+                if (!channels.includes(message.channel.id)) return;
+
+                message.crosspost();
+            } else {
+                console.error("API Error:", response.data.error);
+            }
         } catch (error) {
-            return;
+            console.error("Error fetching channel list:", error);
         }
     }
 }
