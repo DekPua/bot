@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder } = require("discord.js");
+const { Events, EmbedBuilder, AttachmentBuilder } = require("discord.js");
 
 module.exports = {
     name: Events.MessageDelete,
@@ -18,29 +18,37 @@ module.exports = {
         let deleteUi = `<t:${Math.floor(deleteAt / 1000)}:R>`
 
         const embed = new EmbedBuilder()
-        .setColor("Yellow")
-        .setTitle(`⚠️ ${member.username} ได้ลบข้อความใหม่!`)
-        .setDescription(`ข้อความถูกลบเมื่อ ${deleteUi}`)
-        .addFields(
-            {
-                name: "เนื้อหา",
-                value: `${message.content || "(No Content)"}`
-            },
-            {
-                name: "เจ้าของ",
-                value: `\`\`\`Username: ${member.username}\nId: ${member.id}\`\`\``
-            }
-        )
-        .setFooter({ text: "ลบไม่ได้ช่วยให้ลืม System" })
-        .setTimestamp(deleteAt);
+            .setColor("Yellow")
+            .setTitle(`⚠️ มีข้อความถูกลบใหม่!`)
+            .setDescription(`ข้อความถูกลบเมื่อ ${deleteUi}`)
+            .addFields(
+                {
+                    name: "เนื้อหา",
+                    value: `${message.content || "(No Content)"}`
+                },
+                {
+                    name: "เจ้าของ",
+                    value: `\`\`\`Username: ${member.username}\nId: ${member.id}\`\`\``
+                }
+            )
+            .setFooter({ text: "Delete Log System" })
+            .setTimestamp(deleteAt);
+
+        const files = [];
 
         if (attachments.length > 0) {
             embed.addFields({
                 name: "แนบไฟล์",
                 value: attachments.join(' , ')
             });
+
+            attachments.forEach(attachmentUrl => {
+                const file = new AttachmentBuilder(attachmentUrl);
+
+                files.push(file);
+            });
         }
 
-        await sendChannel.send({ embeds: [embed] });
+        await sendChannel.send({ embeds: [embed], files: files });
     }
 }
