@@ -25,9 +25,7 @@ module.exports = {
                         }
                     }
                 }
-            } catch (error) {
-                console.error(error);
-            }
+            } catch (error) {}
         }, 1000 * 10);
 
         setInterval(async () => {
@@ -59,9 +57,7 @@ module.exports = {
                         }
                     }
                 }
-            } catch (error) {
-                console.error(error);
-            }
+            } catch (error) {}
         }, 1000 * 10);
     }
 }
