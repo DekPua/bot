@@ -7,7 +7,7 @@ module.exports = {
         setInterval(async () => {
             try {
                 const response = await axios.get(`${process.env.API_HOST}/dekpua/voicechannel`).catch(error => { });
-                
+
                 if (response.data) {
                     for (const channel of response.data) {
                         const voiceChannel = client.channels.cache.get(channel.channel.id);
@@ -25,13 +25,13 @@ module.exports = {
                         }
                     }
                 }
-            } catch (error) {}
+            } catch (error) { }
         }, 1000 * 10);
 
         setInterval(async () => {
             try {
                 const response = await axios.get(`${process.env.API_HOST}/dekpua/voicechannel`).catch(error => { });
-                
+
                 if (response.data) {
                     for (const channel of response.data) {
                         const voiceChannel = client.channels.cache.get(channel.channel.id);
@@ -57,7 +57,7 @@ module.exports = {
                         }
                     }
                 }
-            } catch (error) {}
+            } catch (error) { }
         }, 1000 * 10);
     }
 }
