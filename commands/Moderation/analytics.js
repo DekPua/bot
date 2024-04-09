@@ -174,26 +174,31 @@ module.exports = {
                     const createdAtList = await messages.map(message => message.createdAt);
 
                     // Count the number of joins for each month
-                    const monthlyCreates = {};
                     createdAtList.forEach((createDate) => {
+                        // Extract day, month, and year from the creation date
+                        const createDay = createDate.getDate();
                         const createMonth = createDate.getMonth() + 1; // January is 0
                         const createYear = createDate.getFullYear();
-                        const monthYear = `${createMonth}-${createYear}`;
-                        if (!monthlyCreates[monthYear]) {
-                            monthlyCreates[monthYear] = 1;
+                    
+                        // Combine day, month, and year to create a unique key for each day
+                        const dayKey = `${createYear}-${createMonth}-${createDay}`;
+                    
+                        // Increment the count for the corresponding day
+                        if (!dailyCreates[dayKey]) {
+                            dailyCreates[dayKey] = 1;
                         } else {
-                            monthlyCreates[monthYear]++;
+                            dailyCreates[dayKey]++;
                         }
                     });
-
-                    // Convert monthlyJoins object to chart data format
-                    const labels = Object.keys(monthlyCreates).sort(); // Sort the labels in chronological order
+                    
+                    // Convert dailyCreates object to chart data format
+                    const labels = Object.keys(dailyCreates).sort(); // Sort the labels in chronological order
                     const data = {
                         labels: labels,
                         datasets: [
                             {
                                 label: "User Count",
-                                data: labels.map((monthYear) => monthlyCreates[monthYear]),
+                                data: labels.map((dayKey) => dailyCreates[dayKey]),
                                 fill: false,
                                 borderColor: "rgb(75, 192, 192)",
                                 backgroundColor: "rgb(75, 192, 192)",
