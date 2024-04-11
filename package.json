@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "release": "node index.js",
-    "dev": "nodemon ./index.js"
+    "dev": "nodemon ./index.js",
+    "lint": "jshint ./*.js",
+    "test": "mocha --recursive"
   },
   "keywords": [
     "dekpua",
@@ -20,7 +22,11 @@
     "axios": "^1.6.7",
     "chart.js": "^3.9.1",
     "chartjs-node-canvas": "^4.1.6",
-    "discord.js": "^14.14.1",
+    "discord.js": "^14.12.1",
     "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "jshint": "^2.13.6",
+    "mocha": "^10.4.0"
   }
 }
