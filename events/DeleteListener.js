@@ -27,6 +27,10 @@ module.exports = {
                     value: `${message.content || "(No Content)"}`
                 },
                 {
+                    name: "ช่อง",
+                    value: `${`<#${message.channel.id}> - (${message.channel.name})` || "(Some Where)"}`
+                },
+                {
                     name: "เจ้าของ",
                     value: `\`\`\`Username: ${member.username}\nId: ${member.id}\`\`\``
                 }
