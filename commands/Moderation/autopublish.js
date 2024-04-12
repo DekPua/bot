@@ -27,10 +27,10 @@ module.exports = {
             .setRequired(true)
         )
         .addStringOption(option =>
-          option.setName('emoji')
+          option
+            .setName('emoji')
             .setDescription("The Emoji is Auto React")
-            .setMaxLength(1)
-            .required(false)
+            .setRequired(false)
         )
     )
     .addSubcommand((command) =>
