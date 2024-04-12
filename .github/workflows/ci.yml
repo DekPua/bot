@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -27,6 +26,11 @@ jobs:
     
     - name: Install Node.js dependencies
       run: npm install
+
+    - name: Install ESLint
+      run: |
+        npm install eslint
+        npm install @microsoft/eslint-formatter-sarif
 
     - name: Continuous Integration
       run: npm ci

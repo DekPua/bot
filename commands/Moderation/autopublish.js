@@ -7,6 +7,9 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 
+const AutoPublishSchemas = require('../../Schemas/AutoPublish');
+
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("autopublisher")
@@ -22,6 +25,12 @@ module.exports = {
             .setDescription("The Channel you want to auto publish")
             .addChannelTypes(ChannelType.GuildAnnouncement)
             .setRequired(true)
+        )
+        .addStringOption(option =>
+          option
+            .setName('emoji')
+            .setDescription("The Emoji is Auto React")
+            .setRequired(false)
         )
     )
     .addSubcommand((command) =>
@@ -51,15 +60,14 @@ module.exports = {
 
     const sub = interaction.options.getSubcommand();
     const channel = await interaction.options.getChannel("channel");
+    const emoji = await interaction.options.getString("emoji");
 
     switch (sub) {
       case "add":
-        const data = await axios.post(
-          `${process.env.API_HOST}/autopublish/new`,
-          {
-            channel: channel.id,
-          }
-        );
+        await AutoPublishSchemas.create({
+          ChannelId: channel.id,
+          Reaction: emoji
+        })
 
         const aembed = new EmbedBuilder()
           .setColor("Purple")
@@ -67,36 +75,21 @@ module.exports = {
             `All message sent in ${channel} will be auto published!`
           );
 
-        if (!data)
-          return await interaction.editReply({
-            content: "There was an error while executing this command!",
-            ephemeral: true,
-          });
-
         await interaction.editReply({
           embeds: [aembed],
           ephemeral: true,
         });
         break;
       case "remove":
-        const data2 = await axios.delete(
-          `${process.env.API_HOST}/autopublish/${channel.id}`,
-          {
-            channel: channel.id,
-          }
-        );
+        await AutoPublishSchemas.deleteOne({
+          ChannelId: channel.id
+        });
 
         const rembed = new EmbedBuilder()
           .setColor("Purple")
           .setDescription(
             `${channel} have been removed off of your auto publish list`
           );
-
-        if (!data2)
-          return await interaction.editReply({
-            content: "There was an error while executing this command!",
-            ephemeral: true,
-          });
 
         await interaction.editReply({
           embeds: [rembed],
