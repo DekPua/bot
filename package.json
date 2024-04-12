@@ -19,7 +19,7 @@
   "author": "DekPua Team",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "chart.js": "^3.9.1",
     "chartjs-node-canvas": "^4.1.6",
     "discord.js": "^14.12.1",
