@@ -18,15 +18,12 @@ module.exports = {
 
         if (!mongodbUri) return;
 
-        await mongoose.connect(mongodbUri || '', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
+        await mongoose.connect(mongodbUri || '', {});
 
         if (mongoose.connect) {
-            console.log('DekPua have connected to database!');
+            console.log(`[${client.shard.ids}] DekPua have connected to database!`);
         } else {
-            console.log('DekPua cannot connect to database right now...');
+            console.log(`[${client.shard.ids}] DekPua cannot connect to database right now...`);
         };
         
     },
