@@ -1,6 +1,7 @@
 const { Events, PermissionFlagsBits, ChannelType } = require("discord.js");
 const AutoVoiceChannel = require('../configs/AutoVoiceChannels.json');
-const { default: axios } = require("axios");
+
+const AutoVoiceChannelSchemas = require('../Schemas/AutoVoiceChannnel');
 
 module.exports = {
     name: Events.VoiceStateUpdate,
@@ -134,37 +135,9 @@ module.exports = {
                     ]
                 });
 
-                await axios.post(`${process.env.API_HOST}/dekpua/voicechannel`, {
-                    channel: {
-                        id: voiceChannel.id,
-                        name: voiceChannel.name,
-                        type: channel.type
-                    },
-                    owner: {
-                        id: newState.member.user.id,
-                        username: newState.member.user.username
-                    },
-                    permissions: [
-                        {
-                            id: newState.member.id,
-                            allow: {
-                                View: true,
-                                Connect: true,
-                                Speak: true,
-                                ManageChannel: true
-                            }
-                        },
-                        {
-                            id: newState.guild.roles.everyone,
-                            allow: {
-                                View: true,
-                                Connect: true,
-                                Speak: true,
-                                ManageChannel: false
-                            }
-                        }
-                    ],
-                    online: 1
+                await AutoVoiceChannelSchemas.create({
+                    ChannelId: voiceChannel.id,
+                    OwnerId: newState.member.user.id,
                 });
 
                 await newState.member.edit({ channel: voiceChannel });
