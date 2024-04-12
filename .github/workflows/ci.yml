@@ -35,8 +35,5 @@ jobs:
     - name: Continuous Integration
       run: npm ci
 
-    - name: Run linters
-      uses: wearerequired/lint-action@v2.3.0
-      with:
-        eslint: true
-        prettier: true
+    - name: Run ESLint
+      run: eslint . --ext .ts,.tsx
