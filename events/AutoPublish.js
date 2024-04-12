@@ -1,26 +1,28 @@
 const axios = require("axios");
 const { Events, ChannelType } = require("discord.js");
 
+const AutoPublishSchemas = require('../Schemas/AutoPublish');
+
 module.exports = {
     name: Events.MessageCreate,
     async execute(message, client) {
-        if (message.channel.type != ChannelType.GuildAnnouncement) return;
-        if (message.author.bot) return;
-        if (message.content.startsWith('.')) return;
-
         try {
-            const response = await axios.get(`${process.env.API_HOST}/autopublish/list`);
-
-            if (response.data.status === 0) {
-                const channels = response.data.channels.map(channel => channel.channelId);
-                if (!channels.includes(message.channel.id)) return;
-
-                message.crosspost();
-            } else {
-                console.error("API Error:", response.data.error);
+            if (message.channel.type !== ChannelType.GuildAnnouncement || message.author.bot || message.content.startsWith('.')) {
+                return;
             }
-        } catch (error) {
-            console.error("Error fetching channel list:", error);
+
+            const data = await AutoPublishSchemas.find({ ChannelId: message.channel.id });
+
+            const promises = data.map(async (channel) => {
+                await Promise.all([
+                    message.crosspost(),
+                    message.react(channel.Reaction)
+                ]);
+            });
+
+            await Promise.all(promises);
+        } catch (err) {
+            console.error("Error in MessageCreate event:", err);
         }
     }
 }
