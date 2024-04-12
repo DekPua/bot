@@ -5,6 +5,8 @@ const manager = new ShardingManager('./bot.js', {
     token: process.env.TOKEN,
 });
 
+manager.spawn();
+
 manager.on('shardCreate', shard => {
     shard.on('death', () => {
         console.log(`[${shard.id}] is Death`);
@@ -13,4 +15,4 @@ manager.on('shardCreate', shard => {
     console.log(`Launched shard ${shard.id}`);
 });
 
-manager.spawn();
+module.exports = manager;
