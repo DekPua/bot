@@ -1,6 +1,6 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, models } = require('mongoose');
 
-let schema = new Schema({
+const schema = new Schema({
     ChannelId: String,
     Reaction: String,
     CreatedAt: {
@@ -9,4 +9,4 @@ let schema = new Schema({
     }
 });
 
-module.exports = model("auto_publish", schema);
+module.exports = models.auto_publish || model("auto_publish", schema);
