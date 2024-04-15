@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, models } = require('mongoose');
 
 let schema = new Schema({
     ChannelId: String,
@@ -9,4 +9,4 @@ let schema = new Schema({
     }
 });
 
-module.exports = model("auto_voice_channel", schema);
+module.exports = models.auto_voice_channel || model("auto_voice_channel", schema);
