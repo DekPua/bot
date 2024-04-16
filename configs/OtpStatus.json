@@ -1,0 +1,5 @@
+{
+    "WaitForVerify": "wait_for_verify",
+    "Success": "success",
+    "Fail": "verify_fail"
+}

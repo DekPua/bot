@@ -1,10 +1,36 @@
-const { default: axios } = require("axios");
-const { ButtonBuilder, ActionRowBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
+const { ButtonBuilder, ActionRowBuilder, ButtonStyle, EmbedBuilder, Colors } = require("discord.js");
+const AccountSchema = require('../Schemas/Account');
+const OtpSchema = require('../Schemas/Otp');
+
+const roles = require('../configs/Roles.json');
+const OtpStatusType = require('../configs/OtpStatus.json');
 
 function isEmailValid(email) {
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     return emailRegex.test(email);
+}
+
+function generateEmailOTP(otpLength = 6) {
+    let otp = "";
+
+    for (let i = 0; i < otpLength; i++) {
+        otp += Math.floor(Math.random() * 10);
+    }
+
+    return otp;
+}
+
+function generateRandomString(length) {
+    const characterPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let randomString = "";
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characterPool.length);
+        randomString += characterPool.charAt(randomIndex);
+    }
+
+    return randomString;
 }
 
 module.exports = {
@@ -14,47 +40,47 @@ module.exports = {
         );
 
         if (isEmailValid(email)) {
-            const login = await axios.post(
-                "https://dekpua-api.hewkawar.xyz/dekpua/login",
-                {
-                    email: email,
-                    discordId: interaction.member.id,
-                }
-            );
+            const account = await AccountSchema.findOne({
+                DiscordId: interaction.member.id,
+                Email: email
+            })
 
-            if (login.status == 502)
-                return await interaction.reply({
-                    content:
-                        "⚠️ บอทไม่สามารถเชื่อมต่อกับฐานข้อมูลได้ กรุณาลองอีกครั้งภายหลัง",
-                    ephemeral: true,
-                });
+            if (account != null) {
+                account.Activate = true;
+                await account.save();
 
-            if (login.data.detail.activate) {
-                let member;
-                const verifyRole = await interaction.guild.roles.cache.get("1213365646667157514");
+                await client.autoGiveRoles(interaction.member, email);
 
-                const hasVerify = await interaction.member.roles.cache.has(verifyRole);
-
-                if (!hasVerify) await interaction.member.roles.add(verifyRole);
-
-                const embed = new EmbedBuilder()
-                    .setColor("Purple")
-                    .setTitle("✅ ยืนยันตัวตนสำเร็จ")
-                    .setDescription(`ยินดีต้อนรับกลับ ${email}`);
-
-                await interaction.reply({
-                    embeds: [embed],
-                    ephemeral: true,
-                });
-            } else {
-                if (!login.data.detail.ref)
                     return await interaction.reply({
-                        content: "⚠️ เกิดข้อผิดพลาดขึ้น โปรดลองอีกครั้งภายหลัง",
-                        ephemeral: true,
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor(Colors.Green)
+                                .setTitle("✅ ยืนยันตัวตนสำเร็จ")
+                                .setDescription(`ยินดีต้อนรับกลับ ${email}`)
+                        ],
+                        ephemeral: true
                     });
+            } else {
+                const otp = generateEmailOTP();
+                const ref = generateRandomString(6);
+
+                client.sendEmail(
+                    email,
+                    `${otp} ยืนยันอีเมลล์ - Dek Pua Official`,
+                    `สวัสดี\nคุณได้ทำการยืนยันอีเมลล์ โดยรหัสยืนยันของคุณคือ ${otp}\nรหัสอ้างอิง : ${ref}\nDekPua Official\nอีเมลนี้ถูกส่งด้วยระบบอัตโนมัติ กรุณาอย่าตอบกลับอีเมลนี้`,
+                    `สวัสดี<br>คุณได้ทำการยืนยันอีเมลล์ โดยรหัสยืนยันของคุณคือ <span>${otp}</span><br>รหัสอ้งอิง : ${ref}<br>DekPua Official<br>อีเมลนี้ถูกส่งด้วยระบบอัตโนมัติ กรุณาอย่าตอบกลับอีเมลนี้`
+                )
+
+                await OtpSchema.create({
+                    DiscordId: interaction.member.id,
+                    Ref: ref,
+                    Email: email,
+                    Otp: otp,
+                    Verified: OtpStatusType.WaitForVerify
+                });
 
                 const enter_otp = new ButtonBuilder()
-                    .setCustomId(`gateway_enter_otp_${login.data.detail.ref}`)
+                    .setCustomId(`gateway_enter_otp_${ref}`)
                     .setLabel('Enter OTP')
                     .setStyle(ButtonStyle.Success);
 
@@ -75,6 +101,13 @@ module.exports = {
                     enter_otp_message: message,
                 };
             }
-        }
+        } else return await interaction.reply({
+            embeds: [
+                new EmbedBuilder()
+                    .setColor(Colors.Red)
+                    .setTitle("❌ รูปแบบของอีเมล์ไม่ถูกต้อง")
+            ],
+            ephemeral: true
+        });
     },
 };

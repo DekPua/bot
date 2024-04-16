@@ -1,5 +1,9 @@
-const { default: axios } = require("axios");
 const { StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, EmbedBuilder } = require("discord.js");
+const AccountSchema = require('../Schemas/Account');
+const OtpSchema = require('../Schemas/Otp');
+
+const roles = require('../configs/Roles.json');
+const OtpStatusType = require('../configs/OtpStatus.json');
 
 const langs = {
     "th": {
@@ -478,17 +482,6 @@ module.exports = async (interaction, client) => {
             });
         }
     } else {
-        const server_status = await axios.get(
-            `${process.env.API_HOST}/dekpua`
-        );
-
-        if (!server_status.data.status == "ok")
-            return await interaction.reply({
-                content:
-                    "⚠️ บอทไม่สามารถเชื่อมต่อกับฐานข้อมูลได้ กรุณาลองอีกครั้งภายหลัง",
-                ephemeral: true,
-            });
-
         const id = interaction.customId;
 
         if (id == "modal_gateway_login_form") {
@@ -512,22 +505,46 @@ module.exports = async (interaction, client) => {
 
                 if (enter_otp_message) await enter_otp_message.delete();
 
-                const otpVerify = await axios.post(`${process.env.API_HOST}/dekpua/login/otp`, {
-                    discordId: interaction.user.id,
-                    otp: otp,
-                    ref: ref,
+                const otpData = await OtpSchema.findOne({
+                    DiscordId: interaction.member.id,
+                    Ref: ref
                 });
 
-                if (otpVerify.data.verify) {
-                    const verifyRole = await interaction.guild.roles.cache.get("1213365646667157514");
+                if (otpData == null || otpData.Verified != OtpStatusType.WaitForVerify) return await interaction.reply({
+                    content: "❌ Otp หมดอายุกรุณาลองอีกครั้งภายหลัง",
+                    ephemeral: true
+                });
 
-                    const hasVerify = await interaction.member.roles.cache.has(verifyRole);
+                if (otpData.Otp == otp && otpData.DiscordId == interaction.member.id) {
+                    let account = await AccountSchema.findOne({
+                        DiscordId: interaction.member.id,
+                        Activate: true
+                    });
 
-                    if (!hasVerify) await interaction.member.roles.add(verifyRole);
+                    if (account == null) {
+                        account = await AccountSchema.create({
+                            DiscordId: interaction.member.id,
+                            Email: otpData.Email,
+                            Activate: true
+                        });
+                    }
 
-                    await interaction.reply({ content: "✅ ยืนยันตัวตนสำเร็จ", ephemeral: true });
+                    otpData.Verified = OtpStatusType.Success;
+                    await otpData.save();
+
+                    await client.autoGiveRoles(interaction.member, otpData.Email);
+
+                    return await interaction.reply({ content: "✅ ยืนยันตัวตนสำเร็จ", ephemeral: true });
+                } else {
+                    otpData.Verified = OtpStatusType.Fail;
+
+                    await otpData.save();
+
+                    return await interaction.reply({
+                        content: "❌ ยืนยันตัวตนไม่สำเร็จ\nOTP ไม่ถูกต้อง",
+                        ephemeral: true
+                    });
                 }
-                else return await interaction.reply({ content: "❌ ยืนยันตัวตนไม่สำเร็จ\nOTP ไม่ถูกต้อง", ephemeral: true });
             } else return await interaction.reply({
                 content: "❌ ไม่สามารถยืนยันตัวตนได้เนื่องจากเกิดข้อผิดหลาดกรุณาลองใหม่อีกครั้งภายหลัง",
                 ephemeral: true

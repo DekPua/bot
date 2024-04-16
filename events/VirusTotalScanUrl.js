@@ -72,7 +72,7 @@ module.exports = {
 
                                 if (haveInList == null) await BlacklistSchemas.create({
                                     Url: url,
-                                    Type: `Malicious ${res.data.data.attributes.stats.malicious}`
+                                    Malicious: res.data.data.attributes.stats.malicious
                                 });
 
                                 await blockMessage(message, message.member, url);
@@ -85,7 +85,7 @@ module.exports = {
 
                                 if (haveInList == null) await WhitelistSchemas.create({
                                     Url: url,
-                                    Type: `Malicious ${res.data.data.attributes.stats.malicious}`
+                                    Malicious: res.data.data.attributes.stats.malicious
                                 });
 
                                 scaned = true;
@@ -96,7 +96,7 @@ module.exports = {
 
                                 if (haveInList == null) await WhitelistSchemas.create({
                                     Url: url,
-                                    Type: `Malicious ${res.data.data.attributes.stats.malicious}`
+                                    Malicious: res.data.data.attributes.stats.malicious
                                 });
 
                                 scaned = true;
