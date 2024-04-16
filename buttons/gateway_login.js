@@ -1,25 +1,28 @@
-const { default: axios } = require("axios");
-const { ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle, EmbedBuilder } = require("discord.js");
+const { ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle, EmbedBuilder, Colors } = require("discord.js");
+const AccountSchema = require('../Schemas/Account');
+const OtpSchema = require('../Schemas/Otp');
 
 module.exports = {
     async execute(interaction, client) {
-        const profileUrl = new URL(`${process.env.API_HOST}/dekpua/profile`);
-        profileUrl.searchParams.set("discordId", interaction.user.id);
+        const logined = await AccountSchema.findOne({
+            DiscordId: interaction.member.id,
+            Activate: true
+        });
 
-        const vcheck = await axios.get(profileUrl.toString());
-
-        if (vcheck.data.activate) {
-            const embed = new EmbedBuilder()
-                .setColor("Purple")
-                .setThumbnail(interaction.user.displayAvatarURL({ extension: "png" }))
-                .setTitle("✅ คุณเข้าสู่ระบบอยู่แล้ว")
-                .addFields(
-                    { name: "Email", value: `\`\`\`${vcheck.data.account.email}\`\`\``, inline: false },
-                    { name: "Discord ID", value: `\`\`\`${vcheck.data.account.discordId}\`\`\``, inline: false }
-                );
-
-            return await interaction.reply({ embeds: [embed], ephemeral: true });
-        } else {
+        if (logined != null) return await interaction.reply({
+            embeds: [
+                new EmbedBuilder()
+                    .setColor(Colors.Green)
+                    .setThumbnail(interaction.user.displayAvatarURL({ extension: "png" }))
+                    .setTitle("✅ คุณเข้าสู่ระบบอยู่แล้ว")
+                    .addFields(
+                        { name: "Email", value: `\`\`\`${logined.Email}\`\`\``, inline: false },
+                        { name: "Discord ID", value: `\`\`\`${logined.DiscordId}\`\`\``, inline: false }
+                    )
+            ],
+            ephemeral: true
+        });
+        else {
             const modal = new ModalBuilder()
                 .setCustomId("modal_gateway_login_form")
                 .setTitle("ยืนยันตัวตนผ่านอีเมล์");
@@ -35,7 +38,7 @@ module.exports = {
 
             modal.addComponents(row);
 
-            await interaction.showModal(modal);
+            return await interaction.showModal(modal);
         }
     },
 };
