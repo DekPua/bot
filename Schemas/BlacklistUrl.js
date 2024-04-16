@@ -2,7 +2,7 @@ const { Schema, model, models } = require('mongoose');
 
 const schema = new Schema({
     Url: String,
-    Type: String
+    Malicious: Number
 }, {
     timestamps: true
 });

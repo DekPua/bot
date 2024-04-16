@@ -106,6 +106,8 @@ module.exports = {
                             }
                         })
                     }
+                }).catch(err => {
+                    console.log("Error while fetching data from VirusTotal");
                 })
             }
         });
