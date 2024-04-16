@@ -101,7 +101,6 @@ module.exports = {
 
                                 scaned = true;
                             } else {
-                                console.log("scan not compleat");
                                 await wait(5_000);
                             }
                         })
