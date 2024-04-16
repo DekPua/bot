@@ -21,9 +21,9 @@ module.exports = {
         await mongoose.connect(mongodbUri || '', {});
 
         if (mongoose.connect) {
-            console.log(`[${client.shard.ids}] DekPua have connected to database!`);
+            console.log(`[${client.shard.ids}] ${client.user.tag} have connected to database!`);
         } else {
-            console.log(`[${client.shard.ids}] DekPua cannot connect to database right now...`);
+            console.log(`[${client.shard.ids}] ${client.user.tag} cannot connect to database right now...`);
         };
         
     },
