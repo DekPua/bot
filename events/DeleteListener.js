@@ -7,6 +7,8 @@ module.exports = {
 
         if (message.guild.id != '1213126282921902230') return;
 
+        if (message.channel.parent.id == '1213130644314660934') return;
+
         const sendChannel = await message.guild.channels.fetch('1226941337304305765');
 
         let attachments = await message.attachments.map(attachment => attachment.url);

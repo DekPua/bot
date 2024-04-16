@@ -6,6 +6,6 @@ module.exports = {
     async execute(guild, client) {
         if (guildList.includes(guild.id)) return;
 
-        guild.leave().catch(console.error);
+        await guild.leave().catch(console.error);
     }
 }

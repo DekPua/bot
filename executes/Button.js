@@ -1,4 +1,3 @@
-const { default: axios } = require("axios");
 const { ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle } = require("discord.js");
 
 const langs = {
@@ -14,17 +13,6 @@ const langs = {
 
 module.exports = async (interaction, client) => {
     const lang = langs[interaction.locale] ?? langs["en-us"];
-
-    const server_status = await axios.get(
-        `${process.env.API_HOST}/dekpua`
-    );
-
-    if (!server_status.data.status == "ok")
-        return await interaction.reply({
-            content:
-                `⚠️ ${lang['error']}`,
-            ephemeral: true,
-        });
 
     const id = interaction.customId;
 
