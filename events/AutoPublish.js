@@ -21,8 +21,6 @@ module.exports = {
             });
 
             await Promise.all(promises);
-        } catch (err) {
-            console.error("Error in MessageCreate event:", err);
-        }
+        } catch (err) { }
     }
 }

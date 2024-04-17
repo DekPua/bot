@@ -158,7 +158,6 @@ module.exports = {
 
           await interaction.showModal(modal);
         } catch (err) {
-          console.log(err);
           await interaction.deferReply({ ephemeral: true });
 
           await interaction.editReply({
