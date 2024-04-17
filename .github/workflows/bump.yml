@@ -1,0 +1,20 @@
+name: Bump Version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  runs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: copapow/version-bump-package@v1
+        id: bump
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          echo "Previous version: ${{ steps.bump.outputs.previous_version }}"
+          echo "New Version: ${{ steps.bump.outputs.new_version }}"
