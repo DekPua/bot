@@ -9,6 +9,10 @@
     "lint": "jshint ./*.js",
     "test": "npx jest"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DekPua/bot.git"
+  },
   "keywords": [
     "dekpua",
     "dek-pua",
