@@ -14,7 +14,7 @@ module.exports = {
 
         setInterval(async () => {
             client.user.setPresence({ activities: [{ name: `DekPua | V${version}`, type: ActivityType.Playing }] });
-        }, 60 * 1000);
+        }, 10 * 1000);
 
         if (!mongodbUri) return;
 
