@@ -14,6 +14,7 @@ jobs:
       - uses: copapow/version-bump-package@v1
         id: bump
         with:
+          default_branch: main
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           echo "Previous version: ${{ steps.bump.outputs.previous_version }}"
