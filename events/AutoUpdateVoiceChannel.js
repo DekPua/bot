@@ -9,7 +9,7 @@ module.exports = {
             try {
                 const OnlineChannelLists = await AutoVoiceChannelSchemas.find();
 
-                await OnlineChannelLists.forEach(async raw => {
+                OnlineChannelLists.forEach(async raw => {
                     const voiceChannel = await client.channels.fetch(raw.ChannelId);
 
                     if (voiceChannel && voiceChannel.type == ChannelType.GuildVoice && voiceChannel.members.size == 0) {

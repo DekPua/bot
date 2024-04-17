@@ -20,24 +20,6 @@ function getTimeAgoString(timeDifference) {
     }
 }
 
-async function deleteMessageIfWithinLastHour(message) {
-    const now = Date.now();
-    const messageTimestamp = message.createdTimestamp;
-    const timeDifference = now - messageTimestamp;
-    const hoursDifference = timeDifference / (1000 * 60 * 60); // Convert milliseconds to hours
-
-    if (hoursDifference <= 1) {
-        try {
-            await message.delete();
-            console.log("Message deleted.");
-        } catch (error) {
-            console.error("Error deleting message:", error);
-        }
-    } else {
-        console.log("Message is not within the last hour.");
-    }
-}
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("clean")
