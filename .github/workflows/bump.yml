@@ -1,22 +1,31 @@
 name: Bump Package Version On Merge
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
 
 jobs:
   bump-package-version:
-    if: github.event.pull_request.merged == true
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: copapow/version-bump-package@v1
+      - name: "Setup Node.js"
+        uses: "actions/setup-node@v1"
         with:
-          default_branch: main
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: EndBug/add-and-commit@v7
+          node-version: 16
+      - name: "Automated Version Bump"
+        uses: "phips28/gh-action-bump-version@master"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          branch: main
-          message: "Bump package version"
+          minor-wording: "add,Adds,new"
+          major-wording: "MAJOR,cut-major"
+          patch-wording: "patch,fixes"
+          rc-wording: "RELEASE,alpha"
+          default: prerelease
+          tag-prefix: "v."
+          target-branch: "main"
+          commit-message: "CI: bumps version to {{version}} [skip ci]"
