@@ -484,7 +484,7 @@ module.exports = async (interaction, client) => {
     } else {
         const id = interaction.customId;
 
-        if (id == "modal_gateway_login_form") {
+        if (id == "modal_gateway_login_form" || id == "giveaway_create") {
             try {
                 await require(`../modals/${id}`).execute(interaction, client);
             } catch (error) {

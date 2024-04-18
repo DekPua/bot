@@ -5,6 +5,7 @@ const AutoVoiceChannelSchemas = require('../Schemas/AutoVoiceChannnel');
 module.exports = {
     name: Events.ClientReady,
     async execute(client) {
+        if (process.env.IS_DEV) return;
         setInterval(async () => {
             try {
                 const OnlineChannelLists = await AutoVoiceChannelSchemas.find();

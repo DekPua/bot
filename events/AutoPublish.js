@@ -6,6 +6,7 @@ const AutoPublishSchemas = require('../Schemas/AutoPublish');
 module.exports = {
     name: Events.MessageCreate,
     async execute(message, client) {
+        if (process.env.IS_DEV) return;
         try {
             if (message.channel.type !== ChannelType.GuildAnnouncement || message.author.bot || message.content.startsWith('.')) {
                 return;

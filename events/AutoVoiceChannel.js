@@ -6,6 +6,7 @@ const AutoVoiceChannelSchemas = require('../Schemas/AutoVoiceChannnel');
 module.exports = {
     name: Events.VoiceStateUpdate,
     async execute(oldState, newState, client) {
+        if (process.env.IS_DEV) return;
         AutoVoiceChannel.Channels.forEach(async (channel) => {
             const { id, type, category, title, permission  } = channel;
 
