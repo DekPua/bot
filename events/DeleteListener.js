@@ -3,6 +3,7 @@ const { Events, EmbedBuilder, AttachmentBuilder } = require("discord.js");
 module.exports = {
     name: Events.MessageDelete,
     async execute(message) {
+        if (process.env.IS_DEV) return;
         if (!message.guild || !message.author || message.author.bot || !message) return;
 
         if (message.guild.id != '1213126282921902230') return;
