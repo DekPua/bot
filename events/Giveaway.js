@@ -63,7 +63,7 @@ module.exports = {
 
                     await message.edit({
                         embeds: [
-                            oldEmbed.addFields(
+                            oldEmbed.setColor(Colors.NotQuiteBlack).addFields(
                                 {
                                     name: "ผู้ชนะ (The Winners)",
                                     value: `${mentions.join(', ')}`
@@ -83,11 +83,13 @@ module.exports = {
 
                         if (giveaway.Description) embed.setDescription(`${giveaway.Description}\n\n${embed.data.description}`);
 
-                        await user.send({
-                            embeds: [
-                                embed
-                            ]
-                        })
+                        try {
+                            await user.send({
+                                embeds: [
+                                    embed
+                                ]
+                            });
+                        } catch (err) { }
                     })
                 })
 
