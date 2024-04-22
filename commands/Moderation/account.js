@@ -70,7 +70,7 @@ module.exports = {
                 const embeds = chunks.map((chunk, index) => {
                     return new EmbedBuilder()
                         .setColor(Colors.Green)
-                        .setTitle(`ผู้ใช้ที่เข้าสู่ระบบแล้ว`)
+                        .setTitle(`ผู้ใช้ที่เข้าสู่ระบบแล้ว - ${accounts.length}`)
                         .setDescription(chunk.map(account => `- <@${account.DiscordId}> - ${account.Email}`).join('\n'));
                 });
 
