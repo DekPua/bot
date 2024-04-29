@@ -1,11 +1,9 @@
 const { ActivityType, Events } = require("discord.js");
-const { version } = require('../package.json');
 const Discord = require('discord.js');
-const nsfw = require("nsfwjs");
+const { version } = require('../package.json');
+
 const mongoose = require('mongoose');
 const mongodbUri = process.env.MONGODB_URI;
-
-const NSFWConfig = require('../configs/NSFWConfig.json');
 
 module.exports = {
     name: Events.ClientReady,
@@ -18,8 +16,6 @@ module.exports = {
         setInterval(async () => {
             client.user.setPresence({ activities: [{ name: `DekPua | V${version}`, type: ActivityType.Playing }] });
         }, 10 * 1000);
-
-        client.nsfwModel = await nsfw.load(NSFWConfig.model);        
 
         if (!mongodbUri) return;
 
