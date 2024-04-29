@@ -41,8 +41,6 @@ module.exports = {
                     acc[className] = Math.floor(probability * 100);
                     return acc;
                 }, {});
-
-                console.log(resault);
                 
                 if (resault.Porn >= 50 || resault.Hentai >= 50) { // Dangerous
                     suspectUrl.push(attachment.url);
