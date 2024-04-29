@@ -24,12 +24,18 @@ module.exports = (client) => {
                 console.log(`[${client.shard.ids}] Started refreshing application (/) commands.`);
 
                 await rest.put(
-                    Routes.applicationCommands(process.env.CLIENT_ID), {
-                        body: client.commandArray
-                    },
+                    Routes.applicationCommands(process.env.CLIENT_ID, "935463490427179049"), {
+                    body: client.commandArray
+                },
                 );
 
                 console.log(`[${client.shard.ids}] Successfully reloaded ${client.commandArray.length} application (/) commands.`);
+
+                if (!process.env.IS_DEV) return;
+
+                await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, "1213126282921902230"), { body: [] })
+                    .then(() => console.log(`[${client.shard.ids}] Successfully deleted all guild commands.`))
+                    .catch(console.error);
             } catch (error) {
                 console.error(error);
             }
